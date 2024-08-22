@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaApple, FaFacebookF, FaGoogle, FaUser, FaLock } from 'react-icons/fa';
+import { useAuth } from '../components/context/AuthContext';
 
 const Logo = () => (
     <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +74,6 @@ const BackgroundPattern = ({ mousePosition }) => {
 
 
 
-
 const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -81,10 +81,12 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const containerRef = useRef(null);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const { login } = useAuth();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (username === 'hello' && password === 'password') {
+            login('dummy-token'); // In a real app, you'd get this token from your backend
             navigate('/');
         } else {
             setError('Invalid username or password');
