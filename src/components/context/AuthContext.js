@@ -15,7 +15,7 @@ import {
     signInWithRedirect
 } from 'aws-amplify/auth';
 import { Hub } from 'aws-amplify/utils';
-import outputs from '../../amplifyconfiguration.json';
+import outputs from '../../../src/amplifyconfiguration.json';
 
 const AuthContext = createContext();
 
