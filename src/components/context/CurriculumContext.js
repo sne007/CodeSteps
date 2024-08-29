@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import {curriculumData} from "../../data/curriculumData";
+import { curriculumData } from "../../data/curriculumData";
 
 const CurriculumContext = createContext();
 
-export const CurriculumProvider = ({ children, languageId }) => {
+export const CurriculumProvider = ({ children }) => {
     const [curriculum, setCurriculum] = useState(null);
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [selectedQuestion, setSelectedQuestion] = useState(null);
@@ -11,19 +11,22 @@ export const CurriculumProvider = ({ children, languageId }) => {
     const [completedQuestions, setCompletedQuestions] = useState([]);
 
     useEffect(() => {
-        const currentCurriculum = curriculumData[languageId];
-        setCurriculum(currentCurriculum);
-        if (currentCurriculum && currentCurriculum.topics.length > 0) {
-            setSelectedTopic(currentCurriculum.topics[0]);
-            if (currentCurriculum.topics[0].questions.length > 0) {
-                setSelectedQuestion(currentCurriculum.questions.find(q => q.id === currentCurriculum.topics[0].questions[0]));
+        // Simulating an API call to fetch curriculum data
+        setTimeout(() => {
+            setCurriculum(curriculumData.python); // Using Python as default
+            if (curriculumData.python.topics.length > 0) {
+                setSelectedTopic(curriculumData.python.topics[0]);
+                if (curriculumData.python.topics[0].questions.length > 0) {
+                    setSelectedQuestion(curriculumData.python.questions.find(q => q.id === curriculumData.python.topics[0].questions[0]));
+                }
             }
-        }
-    }, [languageId]);
+        }, 1000);
+    }, []);
 
     const completeQuestion = (questionId) => {
         if (!completedQuestions.includes(questionId)) {
             setCompletedQuestions([...completedQuestions, questionId]);
+            setScore(prevScore => prevScore + 10); // Assuming each question is worth 10 points
         }
     };
 
