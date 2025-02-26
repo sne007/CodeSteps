@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/codemirror-theme-dracula": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
+    "animejs": "^3.2.2",
     "aws-amplify": "^6.5.2",
     "canvas-confetti": "^1.9.3",
     "framer-motion": "^11.3.28",
