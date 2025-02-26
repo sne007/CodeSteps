@@ -1,7 +1,8 @@
 export const animateStars = (points, setScore) => {
     const starCount = points;
-    const headerElement = document.querySelector('header');
-    const scoreElement = headerElement.querySelector('.bg-gradient-to-r.from-cyan-500');
+
+    // Find the star score counter element specifically by looking for a component with FaStar icon
+    const scoreElement = document.querySelector('.flex.items-center.bg-gradient-to-r.from-cyan-500.to-teal-600');
     
     if (!scoreElement) {
         console.warn('Score element not found, animation will be simplified');

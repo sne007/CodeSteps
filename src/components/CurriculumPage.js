@@ -20,10 +20,12 @@ import {
   FaChevronLeft,
   FaRocket,
   FaUserAstronaut,
-  FaCode
+  FaCode,
+  FaTrophy,
 } from 'react-icons/fa';
 import { RiSwordFill, RiShieldFill, RiMagicFill } from 'react-icons/ri';
 import { GiCrystalBall, GiFireGem, GiSpellBook, GiCursedStar } from 'react-icons/gi';
+import SkillTreeModal from './SkillTreeModal';
 
 // Component for the CodeQuest Logo
 const Logo = () => (
@@ -499,135 +501,6 @@ const TestCasesPanel = ({ testCases, testResults, runTestCases, output, clearOut
   );
 };
 
-// Enhanced skill tree component with simplified grid layout
-const HexSkillTree = ({ curriculum, completedQuestions, onTopicSelect, onQuestionSelect, selectedTopic, selectedQuestion }) => {
-  const containerRef = useRef(null);
-
-  // Helper function to truncate text
-  function truncateText(text, maxLength) {
-    if (!text || text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + '...';
-  }
-
-  // Simplified direct question selection
-  const handleQuestionClick = (questionId) => {
-    const question = curriculum.questions.find(q => q.id === questionId);
-    if (!question) return;
-
-    // Find the parent topic
-    const parentTopic = curriculum.topics.find(topic =>
-      topic.questions.includes(questionId)
-    );
-
-    if (parentTopic) {
-      // First select the topic, then the question
-      onTopicSelect(parentTopic);
-      onQuestionSelect(questionId);
-    }
-  };
-
-  // Simple tile-based question grid
-  return (
-    <div ref={containerRef} className="w-full h-full p-6 overflow-auto">
-      <div className="max-w-4xl mx-auto">
-        <h3 className="text-2xl font-bold text-cyan-300 mb-6">Available Questions</h3>
-
-        {curriculum.topics.map((topic) => !topic.locked && (
-          <div key={topic.id} className="mb-8">
-            <div
-              className={`p-4 rounded-lg mb-4 cursor-pointer ${
-                selectedTopic && selectedTopic.id === topic.id
-                  ? 'bg-cyan-700 bg-opacity-40 border border-cyan-500 shadow-lg shadow-cyan-500/20'
-                  : 'bg-slate-800 bg-opacity-40 border border-slate-700 hover:border-cyan-600'
-              }`}
-              onClick={() => onTopicSelect(topic)}
-            >
-              <h4 className="text-xl font-bold text-white flex items-center">
-                <span className="w-8 h-8 flex items-center justify-center bg-cyan-600 rounded-lg mr-3 text-white">
-                  {topic.id}
-                </span>
-                {topic.name}
-                <div className="ml-auto flex items-center">
-                  <div className="h-2 w-24 bg-slate-700 rounded-full overflow-hidden mr-3">
-                    <div
-                      className="h-full bg-gradient-to-r from-cyan-400 to-teal-500"
-                      style={{
-                        width: `${(topic.questions.filter(q => completedQuestions.includes(q)).length / topic.questions.length) * 100}%`
-                      }}
-                    />
-                  </div>
-                  <span className="text-sm text-cyan-300">
-                    {topic.questions.filter(q => completedQuestions.includes(q)).length}/{topic.questions.length}
-                  </span>
-                </div>
-              </h4>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {topic.questions.map((questionId) => {
-                const question = curriculum.questions.find(q => q.id === questionId);
-                const isCompleted = completedQuestions.includes(questionId);
-                const isSelected = selectedQuestion && selectedQuestion.id === questionId;
-
-                return question && (
-                  <motion.div
-                    key={questionId}
-                    className={`p-4 rounded-lg cursor-pointer border ${
-                      isSelected
-                        ? 'bg-cyan-700 bg-opacity-40 border-cyan-500 shadow-lg shadow-cyan-500/20'
-                        : isCompleted
-                          ? 'bg-green-800 bg-opacity-20 border-green-600'
-                          : 'bg-slate-800 bg-opacity-50 border-slate-700 hover:border-cyan-600'
-                    }`}
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    onClick={() => handleQuestionClick(questionId)}
-                  >
-                    <div className="flex items-start mb-2">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 flex-shrink-0 ${
-                        isCompleted
-                          ? 'bg-green-600'
-                          : isSelected
-                            ? 'bg-cyan-600'
-                            : 'bg-slate-700'
-                      }`}>
-                        {questionId}
-                      </div>
-                      <h5 className="text-lg font-bold text-white">{question.title}</h5>
-                    </div>
-
-                    <p className="text-gray-300 text-sm mb-3 ml-11">
-                      {truncateText(question.description, 80)}
-                    </p>
-
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="flex items-center">
-                        <span className="text-xs text-cyan-300 bg-cyan-900 bg-opacity-40 px-2 py-1 rounded">
-                          {question.points} POINTS
-                        </span>
-                      </div>
-
-                      {isCompleted && (
-                        <div className="flex items-center text-green-400">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          <span className="text-xs font-medium">COMPLETED</span>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 // Main CurriculumPage Component
 const CurriculumPage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -798,6 +671,19 @@ const CurriculumPage = () => {
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
+
+        <SkillTreeModal
+          show={showQuestionsPanel}
+          onClose={() => setShowQuestionsPanel(false)}
+          curriculum={curriculum}
+          completedQuestions={completedQuestions}
+          onTopicSelect={handleTopicSelect}
+          onQuestionSelect={handleQuestionSelect}
+          selectedTopic={selectedTopic}
+          selectedQuestion={selectedQuestion}
+          score={score}
+        />
+
         <header className="flex justify-between items-center mb-6 relative z-80 py-4 px-6 rounded-2xl backdrop-blur-md bg-slate-800 bg-opacity-30 border border-slate-600 border-opacity-50 shadow-lg">
           <div className="flex items-center">
             <AnimatedLogo />
@@ -821,104 +707,16 @@ const CurriculumPage = () => {
               <p className="text-slate-300 text-xs text-center">750 / 1000 XP</p>
             </div>
 
-            <div className="relative mr-4">
-              <motion.button
-                onClick={() => setShowQuestionsPanel(!showQuestionsPanel)}
-                className="bg-gradient-to-r from-cyan-500 to-teal-600 text-white px-4 py-2 rounded-lg flex items-center border border-cyan-400 shadow-lg hover:shadow-cyan-500/20"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="mr-2">Skill Tree</span>
-                <FaChevronDown className={`transform transition-transform ${showQuestionsPanel ? 'rotate-180' : ''}`} />
-              </motion.button>
-
-              {/* Questions Panel */}
-              {showQuestionsPanel && (
-                <>
-                  {/* Backdrop blur overlay */}
-                  <div
-                    className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-[9990]"
-                    onClick={() => setShowQuestionsPanel(false)}
-                  ></div>
-
-                  {/* Enhanced Question Selection Panel */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="fixed inset-4 rounded-xl shadow-2xl z-[9999] overflow-hidden flex flex-col border border-slate-600"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(2,6,23,0.98) 100%)',
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E")`,
-                    }}
-                  >
-                    <div
-                      className="p-4 flex justify-between items-center"
-                      style={{
-                        background: 'linear-gradient(to right, rgba(8,145,178,0.9) 0%, rgba(6,182,212,0.7) 100%)',
-                        borderBottom: '1px solid rgba(6,182,212,0.5)',
-                      }}
-                    >
-                      <h3 className="text-2xl font-bold text-white flex items-center">
-                        <FaStar className="mr-2 text-cyan-200" />
-                        <span>Select Question</span>
-                      </h3>
-                      <button
-                        onClick={() => setShowQuestionsPanel(false)}
-                        className="text-cyan-100 hover:text-white p-2 rounded-full hover:bg-cyan-800/50 transition-all"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                        </svg>
-                      </button>
-                    </div>
-
-                    <div className="flex-grow overflow-hidden">
-                      {/* Question selection grid */}
-                      <div className="h-full">
-                        {curriculum && (
-                          <HexSkillTree
-                            curriculum={curriculum}
-                            completedQuestions={completedQuestions}
-                            onTopicSelect={handleTopicSelect}
-                            onQuestionSelect={handleQuestionSelect}
-                            selectedTopic={selectedTopic}
-                            selectedQuestion={selectedQuestion}
-                          />
-                        )}
-                      </div>
-                    </div>
-
-                    <div
-                      className="p-4 flex justify-between items-center"
-                      style={{
-                        background: 'linear-gradient(to right, rgba(8,145,178,0.9) 0%, rgba(6,182,212,0.7) 100%)',
-                        borderTop: '1px solid rgba(6,182,212,0.5)',
-                      }}
-                    >
-                      <div className="flex items-center">
-                        <div className="mr-4 flex items-center bg-gradient-to-r from-cyan-400 to-teal-500 text-slate-900 px-4 py-1.5 rounded-full shadow-lg border border-cyan-300">
-                          <FaStar className="mr-2" />
-                          <span className="font-bold text-lg">{score}</span>
-                        </div>
-                        <p className="text-cyan-100 text-sm">
-                          Unlock new skills with points earned from challenges!
-                        </p>
-                      </div>
-                      <motion.button
-                        onClick={() => setShowQuestionsPanel(false)}
-                        className="bg-gradient-to-br from-cyan-600 to-cyan-700 hover:from-cyan-700 hover:to-cyan-800 text-white font-medium px-4 py-2 rounded-lg shadow-lg transition-all border border-cyan-500"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        Return to Quest
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                </>
-              )}
-            </div>
+            {/* Skill Tree Button in header */}
+            <motion.button
+              onClick={() => setShowQuestionsPanel(!showQuestionsPanel)}
+              className="bg-gradient-to-r from-cyan-500 to-teal-600 text-white px-4 py-2 rounded-lg flex items-center border border-cyan-400 shadow-lg hover:shadow-cyan-500/20"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="mr-2">Skill Tree</span>
+              <FaChevronDown className={`transform transition-transform ${showQuestionsPanel ? 'rotate-180' : ''}`} />
+            </motion.button>
 
             <motion.div
               className="flex items-center bg-gradient-to-r from-cyan-500 to-teal-600 text-white px-4 py-2 rounded-xl shadow-lg"
