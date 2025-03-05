@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import LanguageSelectionPage from './components/LanguageSelectionPage';
 import CurriculumPage from './components/CurriculumPage';
 import { CurriculumProvider } from './components/context/CurriculumContext';
+import LanguageLoadingAnimation from './components/LanguageLoading';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                         </CurriculumProvider>
                     }
                 />
+                <Route path="/loading/:languageId" element={<LanguageLoadingAnimation />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </Router>

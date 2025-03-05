@@ -1,31 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaPython, FaJava, FaJs, FaCode } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const LanguageLoadingAnimation = ({ languageId }) => {
+const LanguageLoadingAnimation = () => {
+    const { languageId } = useParams();
+    const navigate = useNavigate();
+
     const getLanguageIcon = () => {
         switch (languageId.toLowerCase()) {
             case 'python':
-                return <FaPython className="text-cyan-400 text-6xl" />;
+                return <FaPython className="text-amber-400 text-6xl" />;
             case 'java':
-                return <FaJava className="text-cyan-400 text-6xl" />;
+                return <FaJava className="text-amber-400 text-6xl" />;
             case 'javascript':
-                return <FaJs className="text-cyan-400 text-6xl" />;
+                return <FaJs className="text-amber-400 text-6xl" />;
             default:
-                return <FaCode className="text-cyan-400 text-6xl" />;
+                return <FaCode className="text-amber-400 text-6xl" />;
         }
     };
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            navigate(`/curriculum/${languageId}`);
+        }, 1000);
+        
+        return () => clearTimeout(timer);
+    }, [languageId, navigate]);
+
     return (
         <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center">
-            {/* Background elements to match main theme */}
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-cyan-600 opacity-20 blur-3xl"></div>
-            <div className="absolute bottom-1/3 right-1/3 w-80 h-80 rounded-full bg-teal-600 opacity-10 blur-3xl"></div>
+            {/* Background elements to match Dark Souls theme */}
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-amber-600 opacity-20 blur-3xl"></div>
+            <div className="absolute bottom-1/3 right-1/3 w-80 h-80 rounded-full bg-yellow-600 opacity-10 blur-3xl"></div>
 
-            {/* Grid pattern overlay to match main theme */}
+            {/* Grid pattern overlay to match Dark Souls theme */}
             <div className="absolute inset-0 z-0 opacity-10"
                 style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 60H0V0h60v60zm-20 0H0V0h40v40zm-20 0H0V0h20v20z' fill='%2306B6D4' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 60H0V0h60v60zm-20 0H0V0h40v40zm-20 0H0V0h20v20z' fill='%23F59E0B' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                     backgroundSize: '60px 60px'
                 }}
             ></div>
@@ -33,7 +45,7 @@ const LanguageLoadingAnimation = ({ languageId }) => {
             {/* Loading animation */}
             <div className="relative z-10">
                 <motion.div
-                    className="bg-slate-800 bg-opacity-50 p-8 rounded-2xl border border-cyan-500/30 shadow-xl backdrop-blur-sm"
+                    className="bg-slate-800 bg-opacity-50 p-8 rounded-2xl border border-amber-500/30 shadow-xl backdrop-blur-sm"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -61,7 +73,7 @@ const LanguageLoadingAnimation = ({ languageId }) => {
                         transition={{ delay: 0.3 }}
                     >
                         <motion.div
-                            className="h-full bg-gradient-to-r from-cyan-400 to-teal-500"
+                            className="h-full bg-gradient-to-r from-amber-400 to-yellow-500"
                             initial={{ width: "0%" }}
                             animate={{ width: "100%" }}
                             transition={{
@@ -72,7 +84,7 @@ const LanguageLoadingAnimation = ({ languageId }) => {
                     </motion.div>
 
                     <motion.p
-                        className="text-center text-cyan-300 mt-4 text-sm font-medium"
+                        className="text-center text-amber-300 mt-4 text-sm font-medium font-serif"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [0, 1, 0] }}
                         transition={{
@@ -82,7 +94,7 @@ const LanguageLoadingAnimation = ({ languageId }) => {
                             repeat: Infinity,
                         }}
                     >
-                        Preparing your coding adventure...
+                        Kindling the coding flame...
                     </motion.p>
                 </motion.div>
             </div>
